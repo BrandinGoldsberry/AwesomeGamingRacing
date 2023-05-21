@@ -1,0 +1,7 @@
+﻿CREATE TABLE IF NOT EXISTS tracks
+(
+	Name TEXT NOT NULL,
+	Length REAL NOT NULL,
+	GameName TEXT NOT NULL,
+	Image TEXT
+);

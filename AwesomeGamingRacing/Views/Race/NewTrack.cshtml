@@ -1,0 +1,43 @@
+﻿@using AwesomeGamingRacing.Models.Enums
+@model AwesomeGamingRacing.Models.Track
+
+@{
+    ViewData["Title"] = "NewTrack";
+}
+
+<h1>View</h1>
+
+<h4>Track</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        @using (Html.BeginForm("NewTrack", "Race", FormMethod.Post))
+        {
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Track.Name" class="control-label">Track Name</label>
+                @Html.TextBoxFor(m => m.Name)
+                <span asp-validation-for="Track.Name" class="text-danger"></span>
+
+                <label asp-for="Track.Length" class="control-label">Track Length (Mi.)</label>
+                @Html.TextBoxFor(m => m.Length)
+                <span asp-validation-for="Track.Length" class="text-danger"></span>
+
+                <label asp-for="Track.GameName" class="control-label">Game Name</label>
+                @Html.DropDownListFor(m => m.GameName, new SelectList(EnumHelper.GetEnumDisplayNames<GameName>(), "EnumValue", "Name"))
+                <span asp-validation-for="Track.GameName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        }
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
