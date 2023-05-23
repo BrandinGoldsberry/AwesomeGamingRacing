@@ -20,6 +20,9 @@ namespace AwesomeGamingRacing.Migrations
         protected void Execute(string FilePath)
         {
             FilePath = Environment.CurrentDirectory + "\\Migrations\\SqlFiles\\" + FilePath;
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"Detecting Migration: {FilePath}");
+            Console.ForegroundColor = ConsoleColor.White;
             if (File.Exists(FilePath))
             {
                 Console.ForegroundColor = ConsoleColor.Magenta;
