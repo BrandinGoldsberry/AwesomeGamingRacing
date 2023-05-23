@@ -32,8 +32,6 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapGet("/", () => "Hello ForwardedHeadersOptions!");
-
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
