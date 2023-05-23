@@ -22,6 +22,10 @@ namespace AwesomeGamingRacing.Migrations
             FilePath = Environment.CurrentDirectory + "\\Migrations\\SqlFiles\\" + FilePath;
             if (File.Exists(FilePath))
             {
+                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.WriteLine($"Running Migration: {FilePath}");
+                Console.ForegroundColor = ConsoleColor.White;
+
                 SqliteConnection connection = Database.GetConnection<SqliteConnection>();
                 SqliteTransaction transaction = connection.BeginTransaction();
                 SqliteCommand cmd = connection.CreateCommand();
@@ -31,6 +35,10 @@ namespace AwesomeGamingRacing.Migrations
                 {
                     try
                     {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine($"Version found");
+                        Console.ForegroundColor = ConsoleColor.White;
+
                         transaction.Save("Start");
                         string SQL = File.ReadAllText(FilePath);
                         StringBuilder builder = new StringBuilder(SQL);
@@ -45,7 +53,16 @@ namespace AwesomeGamingRacing.Migrations
                     catch (Exception ex)
                     {
                         transaction.Rollback("Start");
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"Migration FAIL");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.WriteLine(ex.Message);
+                        Console.WriteLine(ex.StackTrace);
                     }
+                }
+                else
+                {
+                    Console.WriteLine($"Migration N/A");
                 }
             }
         }

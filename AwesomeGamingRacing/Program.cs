@@ -46,11 +46,36 @@ IConfiguration configuration = app.Services.GetService<IConfiguration>();
 
 if(!File.Exists("/" + configuration["DatabaseNames:Race"]))
 {
+    Console.ForegroundColor = ConsoleColor.Magenta;
+    Console.WriteLine("Races Does Not exist, creating...");
     var file = File.Create("/" + configuration["DatabaseNames:Race"]);
     file.Close();
+    if(File.Exists("/" + configuration["DatabaseNames:Race"]))
+    {
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine("Success!");
+
+        run();
+    }
+    else
+    {
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine("FAILED! ABORTING");
+    }
+}
+else
+{
+    run();
 }
 
-Migrator migrator = new Migrator(app.Services.GetService<IDatabaseFactory>());
-migrator.RunUp();
+void run()
+{
+    Console.ForegroundColor = ConsoleColor.Green;
+    Console.WriteLine("Migrations starting....");
+    Console.ForegroundColor = ConsoleColor.White;
 
-app.Run();
+    Migrator migrator = new Migrator(app.Services.GetService<IDatabaseFactory>());
+    migrator.RunUp();
+
+    app.Run();
+}
