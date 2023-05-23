@@ -1,5 +1,6 @@
 ﻿using AwesomeGamingRacing.Data;
 using Microsoft.Data.Sqlite;
+using System.Reflection;
 using System.Text;
 
 namespace AwesomeGamingRacing.Migrations
@@ -19,11 +20,11 @@ namespace AwesomeGamingRacing.Migrations
 
         protected void Execute(string FilePath)
         {
-            FilePath = Environment.CurrentDirectory + "\\Migrations\\SqlFiles\\" + FilePath;
+            string sqlContent = ReadResource(FilePath);
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine($"Detecting Migration: {FilePath}");
             Console.ForegroundColor = ConsoleColor.White;
-            if (File.Exists(FilePath))
+            if (!string.IsNullOrWhiteSpace(sqlContent))
             {
                 Console.ForegroundColor = ConsoleColor.Magenta;
                 Console.WriteLine($"Running Migration: {FilePath}");
@@ -43,8 +44,7 @@ namespace AwesomeGamingRacing.Migrations
                         Console.ForegroundColor = ConsoleColor.White;
 
                         transaction.Save("Start");
-                        string SQL = File.ReadAllText(FilePath);
-                        StringBuilder builder = new StringBuilder(SQL);
+                        StringBuilder builder = new StringBuilder(sqlContent);
                         builder.Append("PRAGMA user_version = {0}");
                         string SQLToRun = String.Format(builder.ToString(), UserVersion);
 
@@ -67,6 +67,24 @@ namespace AwesomeGamingRacing.Migrations
                 {
                     Console.WriteLine($"Migration N/A");
                 }
+            }
+        }
+        private string ReadResource(string name)
+        {
+            // Determine path
+            var assembly = Assembly.GetExecutingAssembly();
+            string resourcePath = name;
+            // Format: "{Namespace}.{Folder}.{filename}.{Extension}"
+            if (!name.StartsWith(nameof(AwesomeGamingRacing)))
+            {
+                resourcePath = assembly.GetManifestResourceNames()
+                    .Single(str => str.EndsWith(name));
+            }
+
+            using (Stream stream = assembly.GetManifestResourceStream(resourcePath))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
             }
         }
 

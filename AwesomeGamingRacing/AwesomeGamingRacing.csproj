@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Migrations\SqlFiles\CreateTrackTable.up.sqlite" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Migrations\SqlFiles\CreateTrackTable.up.sqlite" />
   </ItemGroup>
 
