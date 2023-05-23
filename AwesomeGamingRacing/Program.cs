@@ -44,13 +44,15 @@ app.MapRazorPages();
 
 IConfiguration configuration = app.Services.GetService<IConfiguration>();
 
-if(!File.Exists("/" + configuration["DatabaseNames:Race"]))
+string RacesDb = configuration["DatabaseNames:Race"];
+bool doesExist = File.Exists(RacesDb);
+if(!doesExist)
 {
     Console.ForegroundColor = ConsoleColor.Magenta;
     Console.WriteLine("Races Does Not exist, creating...");
-    var file = File.Create("/" + configuration["DatabaseNames:Race"]);
+    var file = File.Create(RacesDb);
     file.Close();
-    if(File.Exists("/" + configuration["DatabaseNames:Race"]))
+    if(File.Exists(RacesDb))
     {
         Console.ForegroundColor = ConsoleColor.Green;
         Console.WriteLine("Success!");
