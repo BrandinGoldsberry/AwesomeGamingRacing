@@ -3,5 +3,6 @@
     public interface IDatabaseFactory
     {
         Database GetRaceDatabase();
+        Database GetUserDatabase();
     }
 }

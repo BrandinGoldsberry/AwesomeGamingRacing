@@ -7,7 +7,7 @@ namespace AwesomeGamingRacing.Models
     public class Track
     {
         private Uri uri;
-
+        public int RowId { get; set; }
         public string Name { get; set; }
         public Uri Image 
         {

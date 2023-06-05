@@ -13,5 +13,10 @@
         {
             return new Database(_configuration["connectionstrings:race"]);
         }
+
+        public Database GetUserDatabase()
+        {
+            return new Database(_configuration.GetConnectionString("user"));
+        }
     }
 }

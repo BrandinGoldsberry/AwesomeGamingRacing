@@ -1,0 +1,17 @@
+﻿CREATE TABLE IF NOT EXISTS users
+(
+	Name TEXT NOT NULL,
+	Email TEXT,
+	Image TEXT,
+	Bio TEXT,
+	Password TEXT,
+	Salt BLOB,
+	Role TEXT,
+	UNIQUE(Name)
+);
+
+CREATE TABLE IF NOT EXISTS usersalts
+(
+	UserId Integer,
+	Salt BLOB
+);

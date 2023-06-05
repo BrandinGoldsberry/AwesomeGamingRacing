@@ -36,6 +36,7 @@ namespace AwesomeGamingRacing.Data
             string sql =
             @"
                 SELECT 
+                    RowId,
                     Name,
                     Image,
                     Length,

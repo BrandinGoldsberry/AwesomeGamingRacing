@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using System.Reflection;
+using System.Text;
 
 namespace AwesomeGamingRacing.Data
 {
@@ -8,12 +9,19 @@ namespace AwesomeGamingRacing.Data
         private readonly Database _database;
         private readonly string _query;
         private readonly IImageManager _imageManager;
+        private readonly List<SqliteParameter> _parameters;
 
         public QueryReader(Database db, string query, IImageManager imageManager)
         {
             _database = db;
             _query = query;
             _imageManager = imageManager;
+            _parameters = new List<SqliteParameter>();
+        }
+
+        public void AddParameter(string key, object value)
+        {
+            _parameters.Add(new SqliteParameter(key, value));
         }
 
         public List<T> GetQueryables<T>() where T : new()
@@ -22,6 +30,7 @@ namespace AwesomeGamingRacing.Data
             SqliteConnection _connection = _database.GetConnection<SqliteConnection>();
             SqliteCommand cmd = _connection.CreateCommand();
             cmd.CommandText = _query;
+            cmd.Parameters.AddRange(_parameters);
             SqliteDataReader r = cmd.ExecuteReader();
 
             while (r.Read())

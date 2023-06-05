@@ -30,42 +30,48 @@ namespace AwesomeGamingRacing.Migrations
                 Console.WriteLine($"Running Migration: {FilePath}");
                 Console.ForegroundColor = ConsoleColor.White;
 
-                SqliteConnection connection = Database.GetConnection<SqliteConnection>();
-                SqliteTransaction transaction = connection.BeginTransaction();
-                SqliteCommand cmd = connection.CreateCommand();
-                cmd.CommandText = "PRAGMA user_version;";
-                long? version = (long?)cmd.ExecuteScalar();
-                if (UserVersion > version)
+                using (SqliteConnection connection = Database.GetConnection<SqliteConnection>())
                 {
-                    try
+                    SqliteTransaction transaction = connection.BeginTransaction();
+                    SqliteCommand cmd = connection.CreateCommand();
+                    cmd.CommandText = "PRAGMA user_version;";
+                    long? version = (long?)cmd.ExecuteScalar();
+                    if (UserVersion > version)
                     {
-                        Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine($"Version found");
-                        Console.ForegroundColor = ConsoleColor.White;
+                        try
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine($"Version found");
+                            Console.ForegroundColor = ConsoleColor.White;
 
-                        transaction.Save("Start");
-                        StringBuilder builder = new StringBuilder(sqlContent);
-                        builder.Append("PRAGMA user_version = {0}");
-                        string SQLToRun = String.Format(builder.ToString(), UserVersion);
+                            transaction.Save("Start");
+                            StringBuilder builder = new StringBuilder(sqlContent);
+                            builder.Append("PRAGMA user_version = {0}");
+                            string SQLToRun = String.Format(builder.ToString(), UserVersion);
 
-                        SqliteCommand alterCmd = connection.CreateCommand();
-                        alterCmd.CommandText = SQLToRun;
-                        alterCmd.ExecuteNonQuery();
-                        transaction.Commit();
+                            SqliteCommand alterCmd = connection.CreateCommand();
+                            alterCmd.CommandText = SQLToRun;
+                            alterCmd.ExecuteNonQuery();
+                            transaction.Commit();
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback("Start");
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine($"Migration FAIL");
+                            Console.ForegroundColor = ConsoleColor.White;
+                            Console.WriteLine(ex.Message);
+                            Console.WriteLine(ex.StackTrace);
+                        }
+                        finally
+                        {
+                            transaction.Dispose();
+                        }
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        transaction.Rollback("Start");
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine($"Migration FAIL");
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.WriteLine(ex.Message);
-                        Console.WriteLine(ex.StackTrace);
+                        Console.WriteLine($"Migration N/A");
                     }
-                }
-                else
-                {
-                    Console.WriteLine($"Migration N/A");
                 }
             }
         }
