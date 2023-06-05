@@ -15,7 +15,7 @@ namespace AwesomeGamingRacing.Data
         }
         public async Task<bool> AddUser(User user)
         {
-            int nextUserId = await GetNextUserId();
+            long nextUserId = await GetNextUserId();
             user.RowId = nextUserId;
 
             SqliteConnection conn = userDatabase.GetConnection<SqliteConnection>();
@@ -65,7 +65,7 @@ namespace AwesomeGamingRacing.Data
             return result > 0;
         }
 
-        private async Task<int> GetNextUserId()
+        private async Task<long> GetNextUserId()
         {
             SqliteConnection conn = userDatabase.GetConnection<SqliteConnection>();
             SqliteCommand cmd = conn.CreateCommand();
@@ -80,7 +80,7 @@ namespace AwesomeGamingRacing.Data
             }
             else
             {
-                return (int)result;
+                return (long)result;
             }
         }
 

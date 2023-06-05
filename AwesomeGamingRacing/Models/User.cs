@@ -5,7 +5,7 @@ namespace AwesomeGamingRacing.Models
 {
     public class User
     {
-        public int RowId { get; set; }
+        public long RowId { get; set; }
         [Required]
         [StringLength(50)]
         public string Name { get; set; }

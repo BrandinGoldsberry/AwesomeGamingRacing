@@ -41,7 +41,11 @@ namespace AwesomeGamingRacing.Controllers
             ModelState.Remove("Image");
             ModelState.Remove("RowId");
             ModelState.Remove("ImageBlob");
-            user.Image = new Uri(_imageManager.BaseImagePath + "/" + _imageManager.DefaultImage);
+            UriBuilder uriBuilder = new UriBuilder();
+            uriBuilder.Scheme = _imageManager.ImageProtocol;
+            uriBuilder.Host = _imageManager.BaseImagePath;
+            uriBuilder.Path = _imageManager.BaseImagePath;
+            user.Image = uriBuilder.Uri;
             user.Role = "Member";
             if (ModelState.IsValid)
             {
